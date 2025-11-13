@@ -3,7 +3,7 @@ import CartButton from "./CartButton"
 import Logo from "./Logo"
 import NavSearch from "./NavSearch"
 import DarkMode from "./DarkMode"
-import LinksDropdown from "./LinksDropdown"
+import {LinksDropdown} from "./LinksDropdown"
 import { Suspense } from "react"
 function Navbar() {
   return (
