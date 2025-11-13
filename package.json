@@ -2,6 +2,7 @@
   "name": "store",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "npx prisma generate && next build",
@@ -9,7 +10,6 @@
     "lint": "eslint",
     "tailwind:init": "tailwindcss init -p"
   },
-  "type": "module",
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "@radix-ui/react-checkbox": "^1.3.3",
