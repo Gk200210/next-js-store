@@ -1855,7 +1855,7 @@ export default clerkMiddleware(async (auth, req) => {
   const isAdminUser = auth().userId === process.env.ADMIN_USER_ID;
 
   if (isAdminRoute(req) && !isAdminUser) {
-    return NextResponse.redirect(new URL('/', req.url));
+     return NextResponse.redirect(new URL('/', req.url));
   }
   if (!isPublicRoute(req)) auth().protect();
 });
@@ -1876,8 +1876,9 @@ ADMIN_USER_ID=
 ```tsx
 import { auth } from '@clerk/nextjs/server';
 function LinksDropdown() {
-  const { userId } = auth();
-  const isAdmin = userId === process.env.ADMIN_USER_ID;
+  const { userId } = await auth();
+const isAdmin = userId === process.env.ADMIN_USER_ID;
+
   return (
     <>
       {links.map((link) => {
@@ -3081,7 +3082,7 @@ export const updateProductImageAction = async (
         id: productId,
       },
       data: {
-        image: fullPath,
+        image: fullPath,ei
       },
     });
     revalidatePath(`/admin/products/${productId}/edit`);
@@ -4052,7 +4053,7 @@ model Cart {
   cartItems CartItem[]
   numItemsInCart Int @default(0)
   cartTotal Int @default(0)
-  shipping Int @default(5)
+  shipping  Int @default(5)
   tax Int @default(0)
   taxRate Float @default(0.1)
   orderTotal Int @default(0)
@@ -4625,7 +4626,7 @@ export default ThirdColumn;
 - actions.ts
 
 ```ts
-eexport const removeCartItemAction = async (
+export const removeCartItemAction = async (
   prevState: any,
   formData: FormData
 ) => {

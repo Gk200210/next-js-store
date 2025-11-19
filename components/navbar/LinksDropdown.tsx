@@ -1,3 +1,4 @@
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,9 +13,12 @@ import { links } from '@/utils/links';
 import UserIcon from './UserIcon';
 import SignOutLink from './SignOutLink';
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
+ async function LinksDropdown() {
+  const {userId }= await auth();
+  const isAdmin = userId === process.env.ADMIN_USER_ID;
 
-export function LinksDropdown() {
-  return (
+  return(
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='outline' className='flex gap-4 max-w-[100px]'>
@@ -38,6 +42,7 @@ export function LinksDropdown() {
         </SignedOut>
         <SignedIn>
           {links.map((link) => {
+            if(link.label === 'dashboard' && !isAdmin) return null;
             return (
               <DropdownMenuItem key={link.href}>
                 <Link href={link.href} className='capitalize w-full'>
@@ -55,3 +60,4 @@ export function LinksDropdown() {
     </DropdownMenu>
   );
 }
+export default LinksDropdown;

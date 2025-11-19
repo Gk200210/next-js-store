@@ -134,6 +134,61 @@ exports.Prisma.ProductScalarFieldEnum = {
   clerkId: 'clerkId'
 };
 
+exports.Prisma.FavoriteScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  rating: 'rating',
+  comment: 'comment',
+  authorName: 'authorName',
+  authorImageUrl: 'authorImageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  productId: 'productId'
+};
+
+exports.Prisma.CartScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  numItemsInCart: 'numItemsInCart',
+  cartTotal: 'cartTotal',
+  shipping: 'shipping',
+  tax: 'tax',
+  taxRate: 'taxRate',
+  orderTotal: 'orderTotal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  cartId: 'cartId',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  products: 'products',
+  orderTotal: 'orderTotal',
+  tax: 'tax',
+  shipping: 'shipping',
+  email: 'email',
+  isPaid: 'isPaid',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -146,7 +201,12 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  Product: 'Product'
+  Product: 'Product',
+  Favorite: 'Favorite',
+  Review: 'Review',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
+  Order: 'Order'
 };
 
 /**

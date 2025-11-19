@@ -106,6 +106,61 @@ exports.Prisma.ProductScalarFieldEnum = {
   clerkId: 'clerkId'
 };
 
+exports.Prisma.FavoriteScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  productId: 'productId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  rating: 'rating',
+  comment: 'comment',
+  authorName: 'authorName',
+  authorImageUrl: 'authorImageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  productId: 'productId'
+};
+
+exports.Prisma.CartScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  numItemsInCart: 'numItemsInCart',
+  cartTotal: 'cartTotal',
+  shipping: 'shipping',
+  tax: 'tax',
+  taxRate: 'taxRate',
+  orderTotal: 'orderTotal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CartItemScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  cartId: 'cartId',
+  amount: 'amount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  clerkId: 'clerkId',
+  products: 'products',
+  orderTotal: 'orderTotal',
+  tax: 'tax',
+  shipping: 'shipping',
+  email: 'email',
+  isPaid: 'isPaid',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -118,7 +173,12 @@ exports.Prisma.QueryMode = {
 
 
 exports.Prisma.ModelName = {
-  Product: 'Product'
+  Product: 'Product',
+  Favorite: 'Favorite',
+  Review: 'Review',
+  Cart: 'Cart',
+  CartItem: 'CartItem',
+  Order: 'Order'
 };
 /**
  * Create the Client
@@ -159,7 +219,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -168,13 +227,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./lib/generated/prisma\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel Product {\n  id          String   @id @default(uuid())\n  name        String\n  company     String\n  description String\n  featured    Boolean\n  image       String\n  price       Int\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @updatedAt\n  clerkId     String\n}\n",
-  "inlineSchemaHash": "2ae282a84b17abf3cb2ebccee63bd3d8ee221784b0bd10f15c17dafa6d2ff24d",
+  "inlineSchema": "// -------------------------\n//  DATASOURCE + GENERATOR\n// -------------------------\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./lib/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// -------------------------\n//       MODELS\n// -------------------------\n\nmodel Product {\n  id          String     @id @default(uuid())\n  name        String\n  company     String\n  description String\n  featured    Boolean\n  image       String\n  price       Int\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n  clerkId     String\n  favorites   Favorite[]\n  reviews     Review[]\n  cartItems   CartItem[]\n}\n\nmodel Favorite {\n  id        String   @id @default(uuid())\n  clerkId   String\n  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)\n  productId String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Review {\n  id             String   @id @default(uuid())\n  clerkId        String\n  rating         Int\n  comment        String\n  authorName     String\n  authorImageUrl String\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @updatedAt\n  product        Product  @relation(fields: [productId], references: [id], onDelete: Cascade)\n  productId      String\n}\n\nmodel Cart {\n  id             String     @id @default(uuid())\n  clerkId        String\n  cartItems      CartItem[]\n  numItemsInCart Int        @default(0)\n  cartTotal      Int        @default(0)\n  shipping       Int        @default(5)\n  tax            Int        @default(0)\n  taxRate        Float      @default(0.1)\n  orderTotal     Int        @default(0)\n  createdAt      DateTime   @default(now())\n  updatedAt      DateTime   @updatedAt\n}\n\nmodel CartItem {\n  id        String   @id @default(uuid())\n  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)\n  productId String\n  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)\n  cartId    String\n  amount    Int\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nmodel Order {\n  id         String   @id @default(uuid())\n  clerkId    String\n  products   Int      @default(0)\n  orderTotal Int      @default(0)\n  tax        Int      @default(0)\n  shipping   Int      @default(0)\n  email      String\n  isPaid     Boolean  @default(false)\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "0e67fb3a68ccbdfb07ba4bf1a61df7b45dde657626c13bff7a22bfdad9a92e50",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"featured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Product\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"company\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"featured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"favorites\",\"kind\":\"object\",\"type\":\"Favorite\",\"relationName\":\"FavoriteToProduct\"},{\"name\":\"reviews\",\"kind\":\"object\",\"type\":\"Review\",\"relationName\":\"ProductToReview\"},{\"name\":\"cartItems\",\"kind\":\"object\",\"type\":\"CartItem\",\"relationName\":\"CartItemToProduct\"}],\"dbName\":null},\"Favorite\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"FavoriteToProduct\"},{\"name\":\"productId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Review\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"rating\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"comment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"authorName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"authorImageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"product\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"ProductToReview\"},{\"name\":\"productId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"Cart\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cartItems\",\"kind\":\"object\",\"type\":\"CartItem\",\"relationName\":\"CartToCartItem\"},{\"name\":\"numItemsInCart\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"cartTotal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"shipping\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tax\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"taxRate\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"orderTotal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"CartItem\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product\",\"kind\":\"object\",\"type\":\"Product\",\"relationName\":\"CartItemToProduct\"},{\"name\":\"productId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cart\",\"kind\":\"object\",\"type\":\"Cart\",\"relationName\":\"CartToCartItem\"},{\"name\":\"cartId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Order\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"clerkId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"products\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"orderTotal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tax\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"shipping\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPaid\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

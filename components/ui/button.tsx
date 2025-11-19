@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-
+import { SignInButton } from "@clerk/nextjs"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -56,5 +56,13 @@ function Button({
     />
   )
 }
-
+export const ProductSignInButton = () => {
+  return (
+    <SignInButton mode='modal'>
+      <Button type='button' size='default' className='mt-8'>
+        Please Sign In
+      </Button>
+    </SignInButton>
+  );
+};
 export { Button, buttonVariants }
