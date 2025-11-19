@@ -562,20 +562,21 @@ export type CartItemWithProduct = Prisma.CartItemGetPayload<{
 
 export const createOrderAction = async (prevState: any, formData: FormData) => {
   const user = await getAuthUser();
-  let orderId :null | String = null
-  let cartId : null | String = null
+  let orderId: null | string = null;
+  let cartId: null | string = null;
   try {
     const cart = await fetchOrCreateCart({
       userId: user.id,
       errorOnFailure: true,
     });
-    cartId = cart.id
+    cartId = cart.id;
     await db.order.deleteMany({
       where: {
         clerkId: user.id,
         isPaid: false,
       },
-    })
+    });
+
     const order = await db.order.create({
       data: {
         clerkId: user.id,
@@ -586,12 +587,15 @@ export const createOrderAction = async (prevState: any, formData: FormData) => {
         email: user.emailAddresses[0].emailAddress,
       },
     });
-    orderId = order.id
+    orderId = order.id;
   } catch (error) {
     return renderError(error);
   }
   redirect(`/checkout?orderId=${orderId}&cartId=${cartId}`);
 };
+
+
+
 
 export const fetchUserOrders = async () => {
   const user = await getAuthUser();
