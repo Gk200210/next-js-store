@@ -13,3 +13,5 @@ const globalForPrisma = globalThis as unknown as {
 const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 export default prisma;
+
+
